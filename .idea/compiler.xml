@@ -6,15 +6,29 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="user-notificationservice.service" />
-        <module name="notification-notificationservice.service" />
+        <module name="config-server" />
+        <module name="notification-service-mirror" />
+        <module name="discovery-server" />
+        <module name="dto-common" />
+        <module name="api-gateway" />
+        <module name="user-service" />
+        <module name="notification-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="notification-service-test.service" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="notification-notificationservice.service" options="-parameters" />
-      <module name="user-notificationservice.service" options="-parameters" />
+      <module name="HW5-Microservices" options="-parameters" />
+      <module name="api-gateway" options="-parameters" />
+      <module name="config-server" options="-parameters" />
+      <module name="discovery-server" options="-parameters" />
+      <module name="dto-common" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
+      <module name="notification-service-mirror" options="-parameters" />
+      <module name="user-service" options="-parameters" />
     </option>
   </component>
 </project>
