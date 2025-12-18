@@ -1,0 +1,5 @@
+/home/joe/.IdeaProjects/HW5-Notification-Service/notification-service-mirror/src/main/java/servicemain/NotificationServiceApplication.java
+/home/joe/.IdeaProjects/HW5-Notification-Service/notification-service-mirror/src/main/java/servicemain/config/KafkaConfig.java
+/home/joe/.IdeaProjects/HW5-Notification-Service/notification-service-mirror/src/main/java/servicemain/controller/NotificationController.java
+/home/joe/.IdeaProjects/HW5-Notification-Service/notification-service-mirror/src/main/java/servicemain/service/EmailService.java
+/home/joe/.IdeaProjects/HW5-Notification-Service/notification-service-mirror/src/main/java/servicemain/service/UserEventListener.java

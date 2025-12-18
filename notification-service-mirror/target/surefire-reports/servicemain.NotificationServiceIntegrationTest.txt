@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: servicemain.NotificationServiceIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.098 s -- in servicemain.NotificationServiceIntegrationTest
