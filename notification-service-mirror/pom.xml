@@ -4,9 +4,9 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-<artifactId>notification-service</artifactId>
+<artifactId>notification-service-mirror</artifactId>
 <version>1.0</version>
-<name>notification-service</name>
+<name>notification-service-mirror</name>
 
 <dependencyManagement>
     <dependencies>

@@ -1,0 +1,6 @@
+servicemain/service/EmailService.class
+servicemain/controller/NotificationController$SendNotificationRequest.class
+servicemain/config/KafkaConfig.class
+servicemain/service/UserEventListener.class
+servicemain/controller/NotificationController.class
+servicemain/NotificationServiceApplication.class

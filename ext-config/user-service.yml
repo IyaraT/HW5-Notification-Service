@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+app:
+  kafka:
+    user-topic: user-events
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-service
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
+
+  mail:
+    host: localhost
+    port: 1025
+    username: test
+    password: test
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+    from: "no-reply@yoursite.local"
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,mappings

@@ -1,0 +1,14 @@
+server:
+  port: 8082
+
+app:
+  kafka:
+    user-topic: user-events
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    eureka:
+      client:
+        enabled: ${EUREKA_ENABLED:true}
