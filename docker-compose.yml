@@ -1,0 +1,134 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: users_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.1
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  discovery-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: discovery-server
+    ports:
+      - "8761:8761"
+    restart: unless-stopped
+
+  config-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: config-server
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./ext-config:/config:ro
+    environment:
+      SERVER_PORT: 8088
+      SPRING_PROFILES_ACTIVE: native
+      SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: file:/config
+    restart: unless-stopped
+
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: user-service
+    depends_on:
+      - postgres
+      - kafka
+      - config-server
+      - discovery-server
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8088
+      SPRING_CLOUD_CONFIG_FAIL_FAST: "true"
+
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+    restart: on-failure
+
+  notification-service-mirror:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: notification-service-mirror
+    depends_on:
+      - kafka
+      - config-server
+      - discovery-server
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8088
+      SPRING_CLOUD_CONFIG_FAIL_FAST: "true"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+
+      MAILTRAP_USER: ${MAILTRAP_USER}
+      MAILTRAP_PASS: ${MAILTRAP_PASS}
+    restart: on-failure
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: notification-service
+    depends_on:
+      - kafka
+      - config-server
+      - discovery-server
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8088
+      SPRING_CLOUD_CONFIG_FAIL_FAST: "true"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+
+      MAILTRAP_USER: ${MAILTRAP_USER}
+      MAILTRAP_PASS: ${MAILTRAP_PASS}
+    restart: on-failure
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: api-gateway
+    depends_on:
+      - config-server
+      - discovery-server
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8088
+      SPRING_CLOUD_CONFIG_FAIL_FAST: "true"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+    ports:
+      - "9000:9000"
+    restart: on-failure
+
+volumes:
+  pgdata:
